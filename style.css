@@ -16,7 +16,7 @@ html, body{
 
 .calculator {
     height: 80%;
-    width: 27%;
+    width: 23.5%;
     border: 1px solid #fff;
     border-radius: 1rem;
     padding: 0.8rem;
@@ -32,9 +32,12 @@ input {
     color: #fff;
     margin: 0.4rem 0.4rem;
     padding: 0.4rem 0.4rem;
-    font-size: 63px;
+    font-size: 44px;
     text-align: right;
     cursor: pointer;
+    /* white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; */
 }
 
 input::placeholder {

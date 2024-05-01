@@ -32,6 +32,7 @@ const subBtn = document.getElementById("sub-btn");
 const addBtn = document.getElementById("add-btn");
 const decimalBtn = document.getElementById("decimal-btn");
 const equalBtn = document.getElementById("equal-btn");
+const percentBtn = document.getElementById("percent");
 const numbButtons = document.querySelectorAll(".numb-buttons");
 
 let result = "";
@@ -49,10 +50,12 @@ const appendNumber = (number) => {
 
 const updateDisplay = () => {
     if (operation){
-        resultElement.value = `${prevOperand} ${operation} ${result}`
+        resultElement.value = `${prevOperand} ${operation} ${result}`;
     } else {
         resultElement.value = result;
     }
+
+    resultElement.scrollLeft = resultElement.scrollWidth;
 }
 
 const selectOperator = (operatorValue) => {
@@ -73,10 +76,8 @@ const selectOperator = (operatorValue) => {
 
 const calculateResult = () => {
     let evalResult;
-    const prev = prevOperand;
-    console.log("0");
-    const current = result;
-    console.log("10");
+    const prev = parseFloat(prevOperand);
+    const current = parseFloat(result);
 
     if (isNaN(prev) || isNaN(current)) {
         return;
@@ -93,6 +94,9 @@ const calculateResult = () => {
             evalResult = prev * current;
             break;
         case "/":
+            if (current === 0) {
+                alert("Division by Zero")
+            }
             evalResult = prev / current;
             break;
         default:
@@ -100,9 +104,10 @@ const calculateResult = () => {
     }
 
     result = evalResult.toString();
-    console.log("result");
     operation = "";
     prevOperand = "";
+
+    updateDisplay();
 
 }
 
@@ -113,11 +118,46 @@ numbButtons.forEach(button => {
     })
 })
 
+const clearDisplay = () => {
+    result = "";
+    operation = "";
+    prevOperand = "";
+    updateDisplay();
+}
+
+// const deleteLastBtn = () => {
+//     if (result === 0) {
+//         return;
+//     } result = result.slice(0, -1);
+//     operation = operation.slice(0, 0);
+//     updateDisplay();
+// }
+
+
+const deleteLastBtn = () => {
+    if (operation !== "" && result === "") {
+      operation = "";
+      result = prevOperand;
+      prevOperand = "";
+      updateDisplay();
+    } else {
+      result = result.slice(0, -1);
+      updateDisplay();
+    }
+  };
+
+
 decimalBtn.addEventListener("click", () => appendNumber("."));
-addBtn.addEventListener("click", () => appendNumber("+"));
-subBtn.addEventListener("click" , () => appendNumber("-"));
-multiBtn.addEventListener("click", () => appendNumber("*"));
-divideBtn.addEventListener("click", () => appendNumber("/"));
+clearBtn.addEventListener("click", clearDisplay);
+deleteBtn.addEventListener("click", deleteLastBtn);
+addBtn.addEventListener("click", () => selectOperator("+"));
+subBtn.addEventListener("click" , () => selectOperator("-"));
+multiBtn.addEventListener("click", () => selectOperator("*"));
+divideBtn.addEventListener("click", () => selectOperator("/"));
+percentBtn.addEventListener("click", () => {
+    result = (result/100);
+    updateDisplay();
+})
 equalBtn.addEventListener("click", () => {
     if (result === "") {
         return;
