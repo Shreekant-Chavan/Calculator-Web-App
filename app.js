@@ -23,7 +23,7 @@
 
 
 
-const inputBox = document.getElementById("input-box");
+const resultElement = document.getElementById("input-box");
 const clearBtn = document.getElementById("clear-btn");
 const deleteBtn = document.getElementById("delete-btn");
 const divideBtn = document.getElementById("divide-btn");
@@ -34,34 +34,76 @@ const decimalBtn = document.getElementById("decimal-btn");
 const equalBtn = document.getElementById("equal-btn");
 const numbButtons = document.querySelectorAll(".numb-buttons");
 
-let input = '';
-let operation = '';
+let result = "";
+let operation = "";
 let prevOperand = 0;
 
 const appendNumber = (number) => {
-    if (number === "." && input.includes("."))
-    return;
-    input += number;
+    if (number === "." && result.includes(".")){
+        return;
+    }
+    result += number;
     updateDisplay();
 }
 
 
 const updateDisplay = () => {
-    inputBox.value = input;
+    if (operation){
+        resultElement.value = `${prevOperand} ${operation} ${result}`
+    } else {
+        resultElement.value = result;
+    }
 }
 
 const selectOperator = (operatorValue) => {
-    if (input === "") 
-    return;
+    if (result === "") {
+        return;
+    }
 
-    if (operation != "" && prevOperand != "") {
+    if (operation !== "" && prevOperand !== "") {
         calculateResult();
     }
 
     operation = operatorValue;
-    prevOperand = input;
-    input = "";
+    prevOperand = result;
+    result = "";
     updateDisplay();
+}
+
+
+const calculateResult = () => {
+    let evalResult;
+    const prev = prevOperand;
+    console.log("0");
+    const current = result;
+    console.log("10");
+
+    if (isNaN(prev) || isNaN(current)) {
+        return;
+    }
+
+    switch (operation) {
+        case "+":
+            evalResult = prev + current;
+            break;
+        case "-":
+            evalResult = prev - current;
+            break;
+        case "*":
+            evalResult = prev * current;
+            break;
+        case "/":
+            evalResult = prev / current;
+            break;
+        default:
+            return;
+    }
+
+    result = evalResult.toString();
+    console.log("result");
+    operation = "";
+    prevOperand = "";
+
 }
 
 
@@ -76,3 +118,10 @@ addBtn.addEventListener("click", () => appendNumber("+"));
 subBtn.addEventListener("click" , () => appendNumber("-"));
 multiBtn.addEventListener("click", () => appendNumber("*"));
 divideBtn.addEventListener("click", () => appendNumber("/"));
+equalBtn.addEventListener("click", () => {
+    if (result === "") {
+        return;
+    }
+    calculateResult();
+    updateDisplay();
+});
